@@ -1,0 +1,10 @@
+name: MineskinGallery
+main: org.inventivetalent.mineskingallery.MineskinGallery
+author: inventivetalent
+version: ${project.version}
+
+softdepend: [NickNamer]
+
+commands:
+  mineskin:
+    aliases: [mskin]

@@ -1,0 +1,4 @@
+gallery:
+  # How many skins to display on each gallery page
+  pageSize: 36
+enableCache: true
