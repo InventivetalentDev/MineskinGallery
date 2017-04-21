@@ -80,6 +80,8 @@ public class MineskinGallery extends JavaPlugin implements Listener {
 			sender.sendMessage("§7~~ §aIngame Client for §6MineSkin.org §7~~");
 			sender.sendMessage("§e/mineskin gallery [Page] [Filter]  §7Display the online skin gallery");
 			sender.sendMessage("  ");
+			sender.sendMessage("§e/mineskin view <Skin ID>  §7View a specific skin");
+			sender.sendMessage("  ");
 			sender.sendMessage("§e/mineskin generate <URL> [Name] [Private]  §7Generate a new skin from an URL");
 			sender.sendMessage("  ");
 
@@ -189,6 +191,30 @@ public class MineskinGallery extends JavaPlugin implements Listener {
 			});
 			return true;
 		}
+		if ("view".equalsIgnoreCase(args[0])) {
+			if (!(sender instanceof Player)) {
+				sender.sendMessage("§cSorry, you need to be a player to view skins");
+				return false;
+			}
+
+			if (args.length == 1) {
+				sender.sendMessage("§cPlease specify the skin ID");
+				return false;
+			}
+
+			int id = -1;
+			try {
+				id = Integer.parseInt(args[1]);
+			} catch (NumberFormatException e) {
+			}
+			if (id < 0) {
+				sender.sendMessage("§cPlease specify a valid skin ID");
+				return false;
+			}
+
+			openView(id, (HumanEntity) sender);
+			return true;
+		}
 		if ("generate".equalsIgnoreCase(args[0])) {
 			if (args.length == 1) {
 				sender.sendMessage("§cPlease specify an image URL");
@@ -246,6 +272,8 @@ public class MineskinGallery extends JavaPlugin implements Listener {
 			return true;
 		}
 
+		sender.sendMessage("§cUnknown action: " + args[0]);
+
 		return false;
 	}
 
@@ -262,15 +290,19 @@ public class MineskinGallery extends JavaPlugin implements Listener {
 				URL skinUrl = new URL("http://api.mineskin.org/get/id/" + id);
 				HttpURLConnection skinConnection = (HttpURLConnection) skinUrl.openConnection();
 				skinConnection.setRequestProperty("User-Agent", "MineskinGallery/" + getDescription().getVersion());
-				JsonObject skinObject = new JsonParser().parse(new InputStreamReader(skinConnection.getInputStream())).getAsJsonObject();
+				if (skinConnection.getResponseCode() == 200) {
+					JsonObject skinObject = new JsonParser().parse(new InputStreamReader(skinConnection.getInputStream())).getAsJsonObject();
 
-				if (enableCache) {
-					cachedFile.createNewFile();
-					try (FileWriter writer = new FileWriter(cachedFile)) {
-						writer.write(skinObject.toString());
+					if (enableCache) {
+						cachedFile.createNewFile();
+						try (FileWriter writer = new FileWriter(cachedFile)) {
+							writer.write(skinObject.toString());
+						}
 					}
+					return skinObject;
+				} else if (skinConnection.getResponseCode() == 404) {
+					return null;
 				}
-				return skinObject;
 			} catch (IOException e) {
 				getLogger().log(Level.WARNING, "IOException while connecting to mineskin.org", e);
 			}
@@ -357,6 +389,11 @@ public class MineskinGallery extends JavaPlugin implements Listener {
 
 	void openView(int id, HumanEntity player) {
 		JsonObject skinObject = getFromCacheOrDownload(id);
+
+		if (skinObject == null) {
+			player.sendMessage("§cFailed to load skin #" + id + " (Not Found)");
+			return;
+		}
 
 		Inventory inventory = Bukkit.createInventory(null, 9 * 6, inventoryViewPrefix + (skinObject.get("name").getAsString().isEmpty() ? ("#" + id) : skinObject.get("name").getAsString()));
 
