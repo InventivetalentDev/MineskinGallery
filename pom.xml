@@ -6,7 +6,7 @@
 
     <groupId>org.inventivetalent</groupId>
     <artifactId>mineskin-gallery</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.0-SNAPSHOT</version>
     <name>MineskinGallery</name>
 
     <build>
@@ -33,8 +33,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.3</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -50,7 +50,6 @@
                         <configuration>
                             <artifactSet>
                                 <includes>
-                                    <include>org.mcstats.*</include>
                                     <include>org.inventivetalent:mineskin-gallery**</include>
                                     <include>org.inventivetalent:reflectionhelper**</include>
                                     <include>org.inventivetalent:mc-wrappers**</include>
@@ -78,41 +77,42 @@
     <dependencies>
         <dependency>
             <groupId>org.spigotmc</groupId>
-            <artifactId>spigot</artifactId>
-            <version>1.9-R0.1-SNAPSHOT</version>
+            <artifactId>spigot-api</artifactId>
+            <version>1.11.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.bukkit</groupId>
-            <artifactId>craftbukkit</artifactId>
-            <version>1.9-R0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mcstats.bukkit</groupId>
-            <artifactId>metrics-lite</artifactId>
-            <version>R8-SNAPSHOT</version>
+            <artifactId>bukkit</artifactId>
+            <version>1.11.2-R0.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>org.inventivetalent</groupId>
             <artifactId>reflectionhelper</artifactId>
-            <version>1.10.2</version>
+            <version>LATEST</version>
         </dependency>
         <dependency>
             <groupId>org.inventivetalent</groupId>
             <artifactId>mc-wrappers</artifactId>
-            <version>1.0.2</version>
+            <version>LATEST</version>
         </dependency>
         <dependency>
             <groupId>org.mineskin</groupId>
             <artifactId>java-client</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>LATEST</version>
         </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.5</version>
+        </dependency>
+
 
         <dependency>
             <groupId>org.inventivetalent.nicknamer</groupId>
             <artifactId>api</artifactId>
-            <version>3.12.3</version>
+            <version>LATEST</version>
         </dependency>
     </dependencies>
 
