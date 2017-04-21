@@ -115,7 +115,7 @@ public class MineskinGallery extends JavaPlugin implements Listener {
 				@Override
 				public void run() {
 					try {
-						URL galleryUrl = new URL("https://api.mineskin.org/get/list/" + finalPage + "?size=" + galleryPageSize + (finalFilter != null ? "&filter=" + finalFilter : ""));
+						URL galleryUrl = new URL("http://api.mineskin.org/get/list/" + finalPage + "?size=" + galleryPageSize + (finalFilter != null ? "&filter=" + finalFilter : ""));
 						HttpURLConnection galleryConnection = (HttpURLConnection) galleryUrl.openConnection();
 						galleryConnection.setRequestProperty("User-Agent", "MineskinGallery/" + getDescription().getVersion());
 						JsonObject galleryObject = new JsonParser().parse(new InputStreamReader(galleryConnection.getInputStream())).getAsJsonObject();
@@ -259,7 +259,7 @@ public class MineskinGallery extends JavaPlugin implements Listener {
 			}
 		} else {
 			try {
-				URL skinUrl = new URL("https://api.mineskin.org/get/id/" + id);
+				URL skinUrl = new URL("http://api.mineskin.org/get/id/" + id);
 				HttpURLConnection skinConnection = (HttpURLConnection) skinUrl.openConnection();
 				skinConnection.setRequestProperty("User-Agent", "MineskinGallery/" + getDescription().getVersion());
 				JsonObject skinObject = new JsonParser().parse(new InputStreamReader(skinConnection.getInputStream())).getAsJsonObject();
