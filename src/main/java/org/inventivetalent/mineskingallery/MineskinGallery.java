@@ -331,7 +331,8 @@ public class MineskinGallery extends JavaPlugin implements Listener {
 							NickNamerAPI.getNickManager().loadCustomSkin("MineSkinGallery-" + skinId, HeadTextureChanger.createProfile(texture.get("value").getAsString(), texture.get("signature").getAsString()));
 							NickNamerAPI.getNickManager().setCustomSkin(event.getWhoClicked().getUniqueId(), "MineSkinGallery-" + skinId);
 						} else if ("§bShow online".equals(itemStack.getItemMeta().getDisplayName())) {
-							event.getWhoClicked().sendMessage("https://mineskin.org/" + skinId);
+							event.getWhoClicked().sendMessage("  ");
+							event.getWhoClicked().sendMessage("§bClick here to view this skin on the MineSkin website: §ahttps://mineskin.org/" + skinId);
 							event.getWhoClicked().closeInventory();
 						}
 					}
