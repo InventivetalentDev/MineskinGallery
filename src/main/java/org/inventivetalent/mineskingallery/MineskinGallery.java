@@ -93,6 +93,10 @@ public class MineskinGallery extends JavaPlugin implements Listener {
 				sender.sendMessage("§cSorry, you need to be a player to open the gallery");
 				return false;
 			}
+			if (!sender.hasPermission("mineskin.gallery")) {
+				sender.sendMessage("§cYou don't have permission to open the gallery");
+				return false;
+			}
 
 			int page = 1;
 			String filter = null;
@@ -196,6 +200,10 @@ public class MineskinGallery extends JavaPlugin implements Listener {
 				sender.sendMessage("§cSorry, you need to be a player to view skins");
 				return false;
 			}
+			if (!sender.hasPermission("mineskin.view")) {
+				sender.sendMessage("§cYou don't have permission to view skins");
+				return false;
+			}
 
 			if (args.length == 1) {
 				sender.sendMessage("§cPlease specify the skin ID");
@@ -218,6 +226,10 @@ public class MineskinGallery extends JavaPlugin implements Listener {
 		if ("generate".equalsIgnoreCase(args[0])) {
 			if (args.length == 1) {
 				sender.sendMessage("§cPlease specify an image URL");
+				return false;
+			}
+			if (!sender.hasPermission("mineskin.generate")) {
+				sender.sendMessage("§cYou don't have permission to generate skins");
 				return false;
 			}
 
@@ -349,14 +361,26 @@ public class MineskinGallery extends JavaPlugin implements Listener {
 						ItemStack skullItem = event.getClickedInventory().getItem(13).clone();
 						int skinId = Integer.parseInt(skullItem.getItemMeta().getLore().get(0).substring(1));
 						if ("§bAdd to your inventory".equals(itemStack.getItemMeta().getDisplayName())) {
+							if (!event.getWhoClicked().hasPermission("mineskin.give.item")) {
+								event.getWhoClicked().sendMessage("§cYou don't have permission to give yourself skulls");
+								return;
+							}
 							event.getWhoClicked().getInventory().addItem(skullItem);
 						} else if ("§bSet as your own head".equals(itemStack.getItemMeta().getDisplayName())) {
+							if (!event.getWhoClicked().hasPermission("mineskin.give.head")) {
+								event.getWhoClicked().sendMessage("§cYou don't have permission to set your head");
+								return;
+							}
 							if (event.getWhoClicked().getInventory().getHelmet() != null) {
 								event.getWhoClicked().getInventory().addItem(event.getWhoClicked().getEquipment().getHelmet());
 								event.getWhoClicked().getInventory().setHelmet(null);
 							}
 							event.getWhoClicked().getInventory().setHelmet(skullItem);
 						} else if ("§bSet as your own skin".equals(itemStack.getItemMeta().getDisplayName())) {
+							if (!event.getWhoClicked().hasPermission("mineskin.give.skin")) {
+								event.getWhoClicked().sendMessage("§cYou don't have permission to set your skin");
+								return;
+							}
 							JsonObject skinObject = getFromCacheOrDownload(skinId);
 							JsonObject texture = skinObject.get("data").getAsJsonObject().get("texture").getAsJsonObject();
 
