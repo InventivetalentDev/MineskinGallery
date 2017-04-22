@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.apache.commons.io.FileUtils;
+import org.bstats.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -32,10 +33,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
@@ -78,6 +76,8 @@ public class MineskinGallery extends JavaPlugin implements Listener {
 			}
 			cacheDirectory.mkdirs();
 		}
+
+		new Metrics(this);
 	}
 
 	@Override
@@ -295,6 +295,12 @@ public class MineskinGallery extends JavaPlugin implements Listener {
 		sender.sendMessage("§cUnknown action: " + args[0]);
 
 		return false;
+	}
+
+	@Override
+	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+		//TODO
+		return super.onTabComplete(sender, command, alias, args);
 	}
 
 	JsonObject getFromCacheOrDownload(int id) {
