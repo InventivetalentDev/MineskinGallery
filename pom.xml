@@ -64,13 +64,11 @@
     </build>
     <distributionManagement>
         <repository>
-            <id>releases</id>
-            <name>Internal Releases</name>
+            <id>sonatype-nexus-releases</id>
             <url>http://repo.inventivetalent.org/content/repositories/releases/</url>
         </repository>
         <snapshotRepository>
-            <id>snapshots</id>
-            <name>Internal Releases</name>
+            <id>sonatype-nexus-snapshots</id>
             <url>http://repo.inventivetalent.org/content/repositories/snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
@@ -132,18 +130,6 @@
         <repository>
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
-        </repository>
-        <repository>
-            <id>sk89q-repo</id>
-            <url>http://maven.sk89q.com/artifactory/repo/</url>
-        </repository>
-        <repository>
-            <id>techcable-repo</id>
-            <url>http://repo.techcable.net/content/groups/public/</url>
-        </repository>
-        <repository>
-            <id>mcstats-repo</id>
-            <url>http://repo.mcstats.org/content/groups/public/</url>
         </repository>
     </repositories>
 </project>
