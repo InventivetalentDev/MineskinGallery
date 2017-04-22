@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -32,6 +33,9 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
@@ -39,7 +43,7 @@ import java.util.logging.Level;
 public class MineskinGallery extends JavaPlugin implements Listener {
 
 	final String inventoryGalleryTitle = "§5MineSkin | §bGallery";
-	final String inventoryViewPrefix   = "§5Mineskin | §b";
+	final String inventoryViewPrefix   = "§5MineSkin | §b";
 
 	Executor connectionExecutor = Executors.newSingleThreadExecutor();
 	MineskinClient mineskinClient;
@@ -48,6 +52,8 @@ public class MineskinGallery extends JavaPlugin implements Listener {
 	int     galleryPageSize  = 36;
 	boolean enableCache      = true;
 	boolean nickNamerEnabled = false;
+
+	Map<UUID, Integer> playerGalleryPages = new HashMap<>();
 
 	@Override
 	public void onEnable() {
@@ -114,6 +120,7 @@ public class MineskinGallery extends JavaPlugin implements Listener {
 			final Inventory inventory = Bukkit.createInventory(null, 9 * 6, inventoryGalleryTitle);
 
 			sender.sendMessage("§7Loading page #" + page + "...");
+			playerGalleryPages.put(((Player) sender).getUniqueId(), page);
 
 			final int finalPage = page;
 			final String finalFilter = filter;
@@ -249,6 +256,7 @@ public class MineskinGallery extends JavaPlugin implements Listener {
 				isPrivate = "private".equalsIgnoreCase(args[3]) || "true".equalsIgnoreCase(args[3]);
 			}
 
+			// TODO: also allow generation for usernames
 			mineskinClient.generateUrl(args[1], SkinOptions.create(name, Model.DEFAULT, isPrivate ? Visibility.PRIVATE : Visibility.PUBLIC), new SkinCallback() {
 
 				@Override
@@ -349,6 +357,7 @@ public class MineskinGallery extends JavaPlugin implements Listener {
 							((Player) event.getWhoClicked()).chat("/mineskin gallery " + page + " " + filter);
 						} else {
 							int skinId = Integer.parseInt(itemStack.getItemMeta().getLore().get(0).substring(1));
+							event.getWhoClicked().closeInventory();
 							((Player) event.getWhoClicked()).chat("/mineskin view " + skinId);
 						}
 					}
@@ -390,11 +399,36 @@ public class MineskinGallery extends JavaPlugin implements Listener {
 							event.getWhoClicked().sendMessage("  ");
 							event.getWhoClicked().sendMessage("§bClick here to view this skin on the MineSkin website: §ahttps://mineskin.org/" + skinId);
 							event.getWhoClicked().closeInventory();
+						} else if ("§bGo back".equalsIgnoreCase(itemStack.getItemMeta().getDisplayName())) {
+							int page = 1;
+							if (playerGalleryPages.containsKey(event.getWhoClicked().getUniqueId())) {
+								page = playerGalleryPages.get(event.getWhoClicked().getUniqueId());
+							}
+							event.getWhoClicked().closeInventory();
+							((Player) event.getWhoClicked()).chat("/mineskin gallery " + page);
 						}
 					}
 				}
 			}
 		}
+	}
+
+	@EventHandler
+	public void on(InventoryCloseEvent event) {
+		final String oldTitle = event.getInventory().getTitle();
+		Bukkit.getScheduler().runTaskLater(this, new Runnable() {
+			@Override
+			public void run() {
+				if (event.getPlayer().getOpenInventory() == null) {
+					playerGalleryPages.remove(event.getPlayer().getUniqueId());
+				} else {
+					String newTitle = event.getPlayer().getOpenInventory().getTitle();
+					if (!newTitle.contains("MineSkin")) {
+						playerGalleryPages.remove(event.getPlayer().getUniqueId());
+					}
+				}
+			}
+		}, 5);
 	}
 
 	ItemStack makeSkull(int id, JsonObject skinObject) throws Exception {
@@ -469,6 +503,14 @@ public class MineskinGallery extends JavaPlugin implements Listener {
 			openWebMeta.setDisplayName("§bShow online");
 			openWebItem.setItemMeta(openWebMeta);
 			inventory.setItem(35, openWebItem);
+		}
+
+		{
+			ItemStack itemStack = new ItemStack(Material.ARROW);
+			ItemMeta meta = itemStack.getItemMeta();
+			meta.setDisplayName("§bGo back");
+			itemStack.setItemMeta(meta);
+			inventory.setItem(49, itemStack);
 		}
 
 		player.closeInventory();
