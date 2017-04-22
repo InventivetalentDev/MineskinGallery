@@ -337,7 +337,7 @@ public class MineskinGallery extends JavaPlugin implements Listener {
 							((Player) event.getWhoClicked()).chat("/mineskin gallery " + page + " " + filter);
 						} else {
 							int skinId = Integer.parseInt(itemStack.getItemMeta().getLore().get(0).substring(1));
-							openView(skinId, event.getWhoClicked());
+							((Player) event.getWhoClicked()).chat("/mineskin view " + skinId);
 						}
 					}
 				}
