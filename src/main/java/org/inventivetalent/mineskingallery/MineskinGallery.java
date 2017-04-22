@@ -299,8 +299,15 @@ public class MineskinGallery extends JavaPlugin implements Listener {
 
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-		//TODO
-		return super.onTabComplete(sender, command, alias, args);
+		List<String> completions = new ArrayList<>();
+
+		if (args.length == 1				) {
+			completions.add("gallery");
+			completions.add("view");
+			completions.add("generate");
+		}
+
+		return completions;
 	}
 
 	JsonObject getFromCacheOrDownload(int id) {

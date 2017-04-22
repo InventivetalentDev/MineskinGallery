@@ -54,6 +54,7 @@
                                     <include>org.inventivetalent:reflectionhelper**</include>
                                     <include>org.inventivetalent:mc-wrappers**</include>
                                     <include>org.mineskin:java-client**</include>
+                                    <include>org.bstats:*</include>
                                 </includes>
                             </artifactSet>
                             <relocations>
