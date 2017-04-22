@@ -7,7 +7,6 @@
     <groupId>org.inventivetalent</groupId>
     <artifactId>mineskin-gallery</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <name>MineskinGallery</name>
 
     <build>
         <finalName>MineskinGallery_v${project.version}</finalName>
