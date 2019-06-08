@@ -116,7 +116,7 @@
         <dependency>
             <groupId>org.inventivetalent.nicknamer</groupId>
             <artifactId>api</artifactId>
-            <version>LATEST</version>
+            <version>3.13.0</version>
         </dependency>
 
         <dependency>
